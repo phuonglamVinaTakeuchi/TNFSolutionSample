@@ -1,0 +1,383 @@
+﻿<UserControl x:Class="TNFForm.Views.TNFSectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TNFForm.Views"
+             xmlns:viewModels="clr-namespace:TNFForm.ViewModels"
+             xmlns:tnfEnum="clr-namespace:TNFData.Enums;assembly=TNFData"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:interactions="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{materialDesign:MaterialDesignFont}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Normal"
+             TextElement.FontSize="14"
+             MaxHeight="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="MaterialDesignStyle.xaml"/>
+                <ResourceDictionary>
+                    <ObjectDataProvider x:Key="SectionTypes"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="tnfEnum:TNFSectionTypes"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                    <ObjectDataProvider x:Key="FoundationTypes"
+                            MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="tnfEnum:TNFFoundationTypes"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <DockPanel Margin="20 20 0 0" HorizontalAlignment="Left">
+                    <Label Content="Section Type"  Width="120" />
+                    <ComboBox ItemsSource="{Binding Source={StaticResource SectionTypes}}"
+                                SelectedItem="{Binding TNFSection.TNFParameters.SectionType,Mode=TwoWay}"/>
+                    <ComboBox ItemsSource="{Binding ScaleOptions}"
+                              SelectedItem="{Binding TNFSection.TNFParameters.ScaleOption}"
+                              SelectedIndex="0"
+                              Margin="20 0 0 0"
+                              materialDesign:HintAssist.Hint="Scale Option"
+                              materialDesign:HintAssist.IsFloating="True"
+                              IsEditable="True"
+                              Name="ScaleCbx">
+                        <interactions:Interaction.Triggers>
+                            <interactions:EventTrigger EventName="LostFocus">
+                                <interactions:InvokeCommandAction Command="{Binding UpdateScaleCommand, Mode=OneWay}"
+                                                                  CommandParameter="{Binding ElementName=ScaleCbx}"/>
+                            </interactions:EventTrigger>
+                        </interactions:Interaction.Triggers>
+                    </ComboBox>
+                </DockPanel>
+                <materialDesign:Card Margin="20">
+                    <StackPanel>
+                        <Expander Header="Global Params">
+                            <StackPanel>
+                                <DockPanel>
+                                    <DockPanel.Resources>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Margin" Value="0 0 20 10"/>
+                                        </Style>
+                                    </DockPanel.Resources>
+                                    <GroupBox Header="Global Dimension" Width="{Binding Width, ElementName=RevoSizeBox}">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Wall Dimension" />
+                                                <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Wall.Height}" materialDesign:HintAssist.Hint="Wall Height" Margin="0"/>
+                                                <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Wall.Thickness}" materialDesign:HintAssist.Hint="Wall Thickness"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Floor Thickness" />
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FloorThickness}" Margin="0"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Stone Thickness" />
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.StoneThickness}" IsEnabled="{Binding TNFSection.TNFParameters.IsStoneThicknessEditable,UpdateSourceTrigger=PropertyChanged}" Margin="0"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="Visibility" Margin="20 20 0 0" VerticalContentAlignment="Center">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <StackPanel Margin="0">
+                                                <CheckBox IsChecked="{Binding TNFSection.TNFParameters.IsDrawBeamSection}"
+                                              Content="Beam Section" />
+                                                <CheckBox IsChecked="{Binding TNFSection.TNFParameters.IsDrawFoundationSection}"
+                                              Content="Foundation Section"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="0">
+                                                <CheckBox IsChecked="{Binding TNFSection.TNFParameters.IsFirtRevoPile}"
+                                              Content="Pile For First Revonation" />
+                                                <CheckBox IsChecked="{Binding TNFSection.TNFParameters.IsSecondRevoPile}"
+                                              Content="Pile For Second Revonation" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </DockPanel>
+                                <DockPanel>
+                                    <GroupBox Header="Revonation Dimension" Margin="0 10 0 0" HorizontalAlignment="Left" x:Name="RevoSizeBox">
+                                        <StackPanel>
+                                            <StackPanel.Resources>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Margin" Value="0 0 20 10"/>
+                                                </Style>
+                                            </StackPanel.Resources>
+                                            <DockPanel>
+                                                <Label Content="First Dimentsion"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FirstRevonationDepth}" materialDesign:HintAssist.Hint="Depth" Margin="0"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FirstRevonationWith}" materialDesign:HintAssist.Hint="Width" />
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FirstRevonationLength}" materialDesign:HintAssist.Hint="Length" />
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Second Dimension"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.SecondRevonationDepth}" materialDesign:HintAssist.Hint="Depth" Margin="0"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.SecondRevonationWidth}" materialDesign:HintAssist.Hint="Width"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Third Dimension"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.ThirdRevonationDepth,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TNFSection.TNFParameters.IsThirdDepthEditable}" Margin="0" materialDesign:HintAssist.Hint="Depth" />
+                                            </DockPanel>
+                                        </StackPanel>
+
+                                    </GroupBox>
+                                    <GroupBox Header="Rebar and Pile" Margin="20 10 0 0" HorizontalAlignment="Left">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Floor Rebar" Width="90"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FloorRebar.Radius}" materialDesign:HintAssist.Hint="Radius"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.FloorRebar.Spacing}" materialDesign:HintAssist.Hint="Spacing"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Pile" Width="90"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.TNFPile.Radius}" materialDesign:HintAssist.Hint="Radius"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.TNFPile.Spacing}" materialDesign:HintAssist.Hint="Spacing"/>
+                                                <TextBox Text="{Binding TNFSection.TNFParameters.TNFPile.Length}" materialDesign:HintAssist.Hint="Length"
+                                                         materialDesign:TextFieldAssist.SuffixText="m"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </DockPanel>
+
+                            </StackPanel>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                        <!-- Beam Parameters-->
+                        <Expander Header="Beam Params">
+                            <DockPanel>
+                                <DockPanel.Resources>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Margin" Value="0 0 20 10"/>
+                                    </Style>
+                                </DockPanel.Resources>
+                                <GroupBox Header="Editable Dimension">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <Label Content="Beam Offset"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.OffsetWithGL}" Margin="0"/>
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Beam Dimension"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.BeamWidth}" materialDesign:HintAssist.Hint="Width" Margin="0"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </GroupBox>
+                                <GroupBox Header="Beam Base Dimension" Margin="20 20 0 0">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <Label Content="Beam Height"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.BeamDepth,Mode=OneWay}" IsEnabled="False" />
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Beam Base Depth"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.BaseBeamDepth}" IsEnabled="False"/>
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Beam Up Distance"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.BeamUpDistance}" IsEnabled="False"/>
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Open Pitch Distance"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.OpenPitchDistance}" IsEnabled="False"/>
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Learn Concreate Thickness"/>
+                                            <TextBox Text="{Binding TNFSection.FootingBeamSectionParams.Beam.ZConcreateThickness}" IsEnabled="False"/>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </GroupBox>
+
+
+                            </DockPanel>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                        <!-- Main Foundation Parameters-->
+                        <Expander Header="Main Foundation Params">
+                            <StackPanel>
+                                <DockPanel>
+                                    <Label Content="Main Foundation Type"/>
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource FoundationTypes}}"
+                                      SelectedItem="{Binding TNFSection.FoundationSectionParams.MainFoundation.FoundationType,Mode=TwoWay}"/>
+                                    <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.Name}" Margin="20 0 0 0" materialDesign:HintAssist.Hint="FName"/>
+                                </DockPanel>
+                                <DockPanel>
+                                    <DockPanel.Resources>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Margin" Value="0 0 20 10"/>
+                                        </Style>
+                                    </DockPanel.Resources>
+                                    <GroupBox Header="NormalType Dimension" >
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation XLength"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.FDimension.XLength}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation YLength"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.FDimension.YLength}" IsEnabled="False"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.FDimension.ZLength}" IsEnabled="{Binding TNFSection.FoundationSectionParams.MainFoundation.IsDepthEditable}"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="DType Dimesion" Margin="20 20 0 0">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Top Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.TopDepth}" IsEnabled="{Binding TNFSection.FoundationSectionParams.MainFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Bottom Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.BottomDepth,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TNFSection.FoundationSectionParams.MainFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="DType Bottom Width"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.BottomWidth,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TNFSection.FoundationSectionParams.MainFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="Offset and Conreate" Margin="20 20 0 0">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Offset With GL"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.OffsetWithGL}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Concreate Thicnkess"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.ZConcreateThickness,Mode=OneWay}" IsEnabled="False"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </DockPanel>
+                                <GroupBox Header="Rebar Properties">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <Label Content="Hakama Rebar"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.HakamaRebar.Radius}" materialDesign:HintAssist.Hint="Radius"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.HakamaRebar.Spacing}" materialDesign:HintAssist.Hint="Spacing"/>
+                                        </DockPanel>
+                                        <DockPanel >
+                                            <Label Content="Besu Rebar"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.BesuRebar.Radius}" materialDesign:HintAssist.Hint="Radius"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.MainFoundation.BesuRebar.Spacing}" materialDesign:HintAssist.Hint="Spacing"/>
+                                        </DockPanel>
+                                    </StackPanel>
+
+                                </GroupBox>
+                            </StackPanel>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                        <!-- Sub Foundation Parameters-->
+                        <Expander Header="Sub Foundation Params">
+                            <StackPanel>
+                                <DockPanel>
+                                    <Label Content="Sub Foundation Type"/>
+                                    <ComboBox ItemsSource="{Binding Source={StaticResource FoundationTypes}}"
+                                      SelectedItem="{Binding TNFSection.FoundationSectionParams.SubFoundation.FoundationType,Mode=TwoWay}"/>
+                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.Name}" Margin="20 0 0 0" materialDesign:HintAssist.Hint="Name"/>
+                            </DockPanel>
+                                <DockPanel>
+                                    <DockPanel.Resources>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Margin" Value="0 0 20 10"/>
+                                        </Style>
+                                    </DockPanel.Resources>
+                                    <GroupBox Header="NormalType Dimension" >
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation XLength"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.FDimension.XLength}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation YLength"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.FDimension.YLength}" IsEnabled="False"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Foundation Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.FDimension.ZLength}" IsEnabled="{Binding TNFSection.FoundationSectionParams.SubFoundation.IsDepthEditable}"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="DType Dimesion" Margin="20 20 0 0">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Top Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.TopDepth}"  IsEnabled="{Binding TNFSection.FoundationSectionParams.SubFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Bottom Depth"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.BottomDepth}" IsEnabled="{Binding TNFSection.FoundationSectionParams.SubFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="DType Bottom Width"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.BottomWidth}" IsEnabled="{Binding TNFSection.FoundationSectionParams.SubFoundation.IsBottomWidthEditable}"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Header="Offset And Concreate" Margin="20 20 0 0">
+                                        <StackPanel>
+                                            <DockPanel>
+                                                <Label Content="Offset With GL"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.OffsetWithGL}"/>
+                                            </DockPanel>
+                                            <DockPanel>
+                                                <Label Content="Concreate Thicnkess"/>
+                                                <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.ZConcreateThickness,Mode=OneWay}" IsEnabled="False"/>
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </DockPanel>
+                                <GroupBox Header="HashiraGata Properties">
+                                    <StackPanel>
+                                        <DockPanel>
+                                            <Label Content="HashiraGata Width"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.HashiraGataDimension.XLength}"
+                                                     />
+                                        </DockPanel>
+                                        <DockPanel>
+                                            <Label Content="Main Rebar"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.HashiraGataMainRebar.Quantities}" materialDesign:HintAssist.Hint="Qty"
+                                                     materialDesign:TextFieldAssist.PrefixText="@"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.HashiraGataMainRebar.Radius}"
+                                                     materialDesign:HintAssist.Hint="Radius"
+                                                     />
+                                        </DockPanel>
+                                        <DockPanel >
+                                            <Label Content="Hoop Rebar"/>
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.HashiraGataHoopRebar.Radius}"
+                                                     materialDesign:HintAssist.Hint="Radius"
+                                                     />
+                                            <TextBox Text="{Binding TNFSection.FoundationSectionParams.SubFoundation.HashiraGataHoopRebar.Spacing}"
+                                                     materialDesign:HintAssist.Hint="Spacing"
+                                                     />
+                                        </DockPanel>
+                                    </StackPanel>
+
+                                </GroupBox>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
+                </materialDesign:Card>
+
+
+            </StackPanel>
+        </ScrollViewer>
+
+
+
+    </Grid>
+</UserControl>

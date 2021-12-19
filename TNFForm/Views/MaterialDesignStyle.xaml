@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <ResourceDictionary.MergedDictionaries>
+        <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="DeepOrange" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+        <ResourceDictionary>
+            <Style TargetType="DockPanel">
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <!--<Setter Property="Margin" Value="0 10 0 0"/>-->
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignOutlinedComboBox}">
+                <Setter Property="Width" Value="220" />
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="DockPanel.Dock" Value="Left"/>
+                <Setter Property="materialDesign:ComboBoxAssist.ShowSelectedItem" Value="True"/>
+            </Style>
+            <Style TargetType="{x:Type Border}" x:Key="HorizontalDividerBorder">
+                <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}"/>
+                <Setter Property="UseLayoutRounding" Value="True"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Height" Value="1"/>
+            </Style>
+            <Style TargetType="Label" BasedOn="{StaticResource MaterialDesignLabel}">
+                <Setter Property="Width" Value="150"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="10 0" />
+                <Setter Property="Opacity" Value="0.56" />
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+            <Style TargetType="Expander" BasedOn="{StaticResource MaterialDesignExpander}">
+                <Setter Property="Padding" Value="20"/>
+            </Style>
+            <Style TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}">
+                <Setter Property="Margin" Value="10 20 0 0"/>
+                <Setter Property="Width" Value="200"/>
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="Margin" Value="20 0 0 0"/>
+            </Style>
+            <Style TargetType="GroupBox">
+                <Setter Property="Margin" Value="0 20 0 0"/>
+            </Style>
+            <Style TargetType="materialDesign:Card">
+                <Setter Property="Width" Value="auto"/>
+            </Style>
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

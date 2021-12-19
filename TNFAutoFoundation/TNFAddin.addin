@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+    <AddIn Type="Application">
+        <Name>TNF Auto Foundation</Name>
+        <Assembly>TNFAutoFoundation.dll</Assembly>
+        <AddInId>5B83CB2C-E596-4D70-BB0F-897FB2174109</AddInId>
+        <FullClassName>TNFAutoFoundation.TNFApp</FullClassName>
+        <VendorId>TNF Auto Foundation</VendorId>
+        <VendorDescription>TNF Auto Foundation</VendorDescription>
+    </AddIn>
+</RevitAddIns>
